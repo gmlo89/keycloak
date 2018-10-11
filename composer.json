@@ -1,0 +1,19 @@
+{
+    "name": "gmlo89/keycloak",
+    "description": "Keycloak / Laravel",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["Laravel", "Keycloak", "PHP"],
+    "authors": [
+        {
+            "name": "Giovanni Lopez",
+            "email": "gmlo89@hotmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Gmlo\\Keycloak\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
