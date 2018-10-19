@@ -5,9 +5,14 @@ namespace Gmlo\Keycloak;
 use Illuminate\Support\ServiceProvider;
 use Gmlo\Keycloak\Auth\KeycloakUserProvider;
 use Gmlo\Keycloak\Auth\KeycloakGuard;
+use Gmlo\Keycloak\Manager\UserRepo;
+
+//use Gmlo\Keycloak\Manager\UserRepo;
 
 class KeycloakServiceProvider extends ServiceProvider
 {
+    protected $defer = true;
+
     /**
      * Register the service provider.
      *
@@ -17,6 +22,12 @@ class KeycloakServiceProvider extends ServiceProvider
     {
         $configPath = __DIR__ . '/config/keycloak.php';
         $this->mergeConfigFrom($configPath, 'keycloak');
+        /*App::bind('userrepo', function () {
+            return new UserRepo();
+        });*/
+        $this->app->bind('userrepo', function ($app) {
+            return new UserRepo();
+        });
     }
 
     /**
@@ -31,5 +42,10 @@ class KeycloakServiceProvider extends ServiceProvider
             $request = app('request');
             return new KeycloakGuard($userProvider, $request, $config);
         });
+    }
+
+    public function provides()
+    {
+        return ['userrepo'];
     }
 }

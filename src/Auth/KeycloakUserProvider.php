@@ -23,12 +23,18 @@ class KeycloakUserProvider implements UserProvider
      */
     public function retrieveByCredentials(array $credentials)
     {
-        return $this->keycloak->getToken($credentials['username'], $credentials['password']);
+        $token = $this->keycloak->getToken($credentials['username'], $credentials['password']);
+
+        if (!is_null($token)) {
+            return new User($token['access_token'], $token['refresh_token']);
+        }
+        return null;
     }
 
     public function retrieveById($identifier)
     {
-        return $this->keycloak->getUserByToken($identifier);
+        return new User($identifier);
+        //return $this->keycloak->getUserByToken($identifier);
     }
 
     /**
@@ -39,7 +45,11 @@ class KeycloakUserProvider implements UserProvider
      */
     public function authRefresh($refresh_token)
     {
-        return $this->keycloak->getUserByRefreshToken($refresh_token);
+        $refresh = $this->keycloak->getUserByRefreshToken($refresh_token);
+        if ($refresh !== false) {
+            return new User($refresh['access_token'], $refresh['refresh_token']);
+        }
+        return null;
     }
 
     public function retrieveByToken($identifier, $token)

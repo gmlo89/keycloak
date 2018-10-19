@@ -14,7 +14,7 @@ class KeycloakGuard implements StatefulGuard, SupportsBasicAuth
     use GuardHelpers;
 
     protected $request;
-    protected $keycloak;
+    //protected $keycloak;
     protected $inputKey = 'keycloak_token';
     protected $loggedOut = false;
     protected $user = null;
@@ -107,6 +107,11 @@ class KeycloakGuard implements StatefulGuard, SupportsBasicAuth
         // every call to this method because that would be tremendously slow.
 
         if (!is_null($this->user)) {
+            if (!$this->user->isActiveToken()) {
+                //dd('as');
+                $this->refreshSession();
+                //dd($this->user);
+            }
             return $this->user;
         }
 
@@ -134,6 +139,7 @@ class KeycloakGuard implements StatefulGuard, SupportsBasicAuth
             $this->login($user);
             return true;
         }
+        $this->user = null;
     }
 
     /**
