@@ -21,7 +21,7 @@ class User extends Authenticatable
     public function __construct($info, $refresh_token = null)
     {
         $this->custom_attrs = config('keycloak.custom_attributes');
-        $this->default_attrs = ['username', 'email', 'first_name', 'last_name', 'id'];
+        $this->default_attrs = ['username', 'email', 'first_name', 'last_name', 'id', 'password', 'exp'];
         if (is_string($info)) {
             $this->setToken($info);
             $this->refresh_token = $refresh_token;
@@ -39,6 +39,7 @@ class User extends Authenticatable
         }
         $this->attributes['id'] = $this->attributes['sub'];
         $this->attributes['username'] = $this->attributes['preferred_username'];
+        //dd($this->attributes);
     }
 
     public function encode()
@@ -62,7 +63,8 @@ class User extends Authenticatable
         if (isset($this->attributes['password']) and !empty($this->attributes['password'])) {
             $result['credentials'] = [[
                 'type' => 'password',
-                'value' => $this->attributes['password']
+                'value' => $this->attributes['password'],
+                'temporary' => false,
             ]];
         }
 
