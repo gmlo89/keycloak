@@ -20,14 +20,17 @@ class KeycloakServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $configPath = __DIR__ . '/config/keycloak.php';
-        $this->mergeConfigFrom($configPath, 'keycloak');
         /*App::bind('userrepo', function () {
             return new UserRepo();
         });*/
         $this->app->bind('userrepo', function ($app) {
             return new UserRepo();
         });
+
+        $this->mergeConfigFrom(
+            __DIR__ . '/config/keycloak.php',
+            'keycloak'
+        );
     }
 
     /**
@@ -37,11 +40,14 @@ class KeycloakServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        /*
         \Auth::extend('keycloak', function ($app, $name, array $config) {
             $userProvider = app(KeycloakUserProvider::class);
             $request = app('request');
             return new KeycloakGuard($userProvider, $request, $config);
-        });
+        });*/
+
+        $this->publishes([__DIR__ . '/config/keycloak.php' => config_path('keycloak.php')]);
     }
 
     public function provides()

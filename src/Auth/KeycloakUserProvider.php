@@ -9,10 +9,16 @@ use Gmlo\Keycloak\Services\Keycloak;
 class KeycloakUserProvider implements UserProvider
 {
     protected $keycloak;
+    protected $user_class;
 
     public function __construct()
     {
         $this->keycloak = new Keycloak();
+        if (!is_null(config('keycloak.model', null))) {
+            $this->user_class = config('keycloak.model');
+        } else {
+            $this->user_class = User::class;
+        }
     }
 
     /**
@@ -26,14 +32,14 @@ class KeycloakUserProvider implements UserProvider
         $token = $this->keycloak->getToken($credentials['username'], $credentials['password']);
 
         if (!is_null($token)) {
-            return new User($token['access_token'], $token['refresh_token']);
+            return new $this->user_class($token['access_token'], $token['refresh_token']);
         }
         return null;
     }
 
     public function retrieveById($identifier)
     {
-        return new User($identifier);
+        return new $this->user_class($identifier);
         //return $this->keycloak->getUserByToken($identifier);
     }
 
@@ -47,7 +53,7 @@ class KeycloakUserProvider implements UserProvider
     {
         $refresh = $this->keycloak->getUserByRefreshToken($refresh_token);
         if ($refresh !== false) {
-            return new User($refresh['access_token'], $refresh['refresh_token']);
+            return new $this->user_class($refresh['access_token'], $refresh['refresh_token']);
         }
         return null;
     }

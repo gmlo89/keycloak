@@ -11,9 +11,6 @@ class User extends Authenticatable
     public $token;
     public $refresh_token;
     protected $casts = ['id' => 'string'];
-    /*protected $attributes_keys = [
-        'user', 'password', 'name', 'email', 'username', 'id', 'first_name', 'last_name', 'enabled', 'created_at', 'notes', 'phone_number'
-    ];*/
 
     protected $default_attrs;
     protected $custom_attrs;
@@ -39,7 +36,6 @@ class User extends Authenticatable
         }
         $this->attributes['id'] = $this->attributes['sub'];
         $this->attributes['username'] = $this->attributes['preferred_username'];
-        //dd($this->attributes);
     }
 
     public function encode()
@@ -102,10 +98,6 @@ class User extends Authenticatable
     }
 
     // ToDo
-    /*public function isSuperAdmin()
-    {
-        return $this->hasRole('super_admin');
-    }*/
 
     /*public function hasRole($role)
     {
@@ -120,7 +112,6 @@ class User extends Authenticatable
     {
         foreach ($data as $key => $value) {
             $attr = snake_case($key);
-
             if (in_array($attr, $this->default_attrs) or in_array($key, $this->custom_attrs)) {
                 if (!is_array($value) || count($value) > 1) {
                     $this->attributes[$attr] = $value;
@@ -138,24 +129,6 @@ class User extends Authenticatable
             // ToDo: check why doesn't work correctly (Other date);
             $this->attributes['created_at'] = Carbon::parse(gmdate("Y-m-d\TH:i:s\Z", $data['createdTimestamp']));
         }
-    }
-
-    public function hasTeams()
-    {
-        // ToDo
-        return \App\Models\User::first()->hasTeams();
-    }
-
-    public function permissions()
-    {
-        // ToDo
-        return \App\Models\User::first()->permissions();
-    }
-
-    public function getChannel()
-    {
-        // ToDo
-        return \App\Models\User::first()->channel;
     }
 
     public function __toString()

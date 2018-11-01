@@ -11,4 +11,5 @@ return [
     ],
     'enabled_default' => true,
     'username_field' => 'email',
+    'model' => null,
 ];
