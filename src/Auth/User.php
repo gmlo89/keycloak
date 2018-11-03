@@ -74,7 +74,7 @@ class User extends Authenticatable
 
     public function isActiveToken()
     {
-        return !Carbon::parse(gmdate("Y-m-d\TH:i:s\Z", $this->attributes['exp']))->isPast();
+        return (isset($this->attributes['exp']) and !Carbon::parse(gmdate("Y-m-d\TH:i:s\Z", $this->attributes['exp']))->isPast());
     }
 
     public function __get($key)
