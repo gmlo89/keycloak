@@ -105,7 +105,7 @@ class Keycloak
     protected function request($method, $path, $token = null, $form_params = null, $json = null)
     {
         $info = [
-            'verify' => true,
+            'verify' => false,
             'headers' => [],
         ];
         if (!is_null($token)) {
